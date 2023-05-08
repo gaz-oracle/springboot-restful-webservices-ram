@@ -10,3 +10,10 @@ public interface UserService {
     User createUser(User user);
 
 }
+/** 3
+ * Definamos el método en una interfaz UserService, Así que demos el tipo de retorno
+ * del método como la @Entity User y demos el nombre del método como createUser() y pasemos User
+ * como Instancia de entidad como argumento de método
+ * @param user
+ * @return
+ */
