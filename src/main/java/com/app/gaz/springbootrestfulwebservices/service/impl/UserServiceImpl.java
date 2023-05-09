@@ -6,6 +6,7 @@ import com.app.gaz.springbootrestfulwebservices.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,6 +37,37 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         return optionalUser.get();
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    /**
+     * 1º obtengamos el objeto User existente de la base de datos y luego actualizaremos ese objeto User.
+     * 2º Y de nuevo, guardaremos ese objeto User actualizado en la base de datos.
+     * 3º Así que llamemos a User.getId() y este método findById() devuelve opcional de tipo User,
+     * Así que llamemos a un método get().
+     * 4º Ahora, que obtuvimos el objeto exstingUser de la tabla de la base de datos,A continuación, actualizaremos
+     * este usuario existente y, a continuación, lo guardaremos de nuevo en la tabla de la base de datos
+     * 5º Aquí puedes ver que el método updateUser() tiene un objeto User como argumento de método, y este objeto User
+     * Contiene toda la información actualizada enviada por el cliente.
+     * 6º A continuación, lo que haremos, actualizaremos toda la información de este objeto User en este User existente.
+     * 7º el tipo de return de esta clase Updateuser es User, por lo tanto, este método debe devolver el objeto User actulizado
+     *
+     * obtuvimos el usuario existente por ID y luego hemos actualizado este usuario existente con nombre, apellido, correo electrónico,
+     * y luego hemos guardado este usuario existente en una base de datos y con nombre, apellido, correo electrónico, y luego hemos
+     * guardado este usuario existente en una base de datos y a continuación, este método devuelve el objeto User actualizado
+     */
+    @Override
+    public User updateUser(User user) {
+        User exstingUser = userRepository.findById(user.getId()).get();
+        exstingUser.setFirstName(user.getFirstName());
+        exstingUser.setLastName(user.getLastName());
+        exstingUser.setEmail(user.getEmail());
+        User updateUser= userRepository.save(exstingUser);
+        return updateUser;
     }
 }
 /**

@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/users")
 public class UserController {
@@ -40,6 +42,33 @@ public class UserController {
     public ResponseEntity<User> getUserById(@PathVariable("id") Long userId) {
         User user = userService.getUserById(userId); //<<--**
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    /**
+     * Build Get all Users REST API
+     * http://locahost:8080/api/users
+     *
+     * @return
+     */
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    /**
+     * Build Update USER REST API
+     */
+
+
+
+
+    @PutMapping("{id}")
+    public ResponseEntity<User> updateUser(@PathVariable("id")Long userId,
+                                           @RequestBody  User user) {
+        user.setId(userId);
+        User updateUser = userService.updateUser(user);
+        return new ResponseEntity<>(updateUser, HttpStatus.OK);
     }
 
 }
