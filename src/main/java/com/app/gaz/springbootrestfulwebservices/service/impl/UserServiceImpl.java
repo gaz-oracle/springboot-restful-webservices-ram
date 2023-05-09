@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
      * Contiene toda la información actualizada enviada por el cliente.
      * 6º A continuación, lo que haremos, actualizaremos toda la información de este objeto User en este User existente.
      * 7º el tipo de return de esta clase Updateuser es User, por lo tanto, este método debe devolver el objeto User actulizado
-     *
+     * <p>
      * obtuvimos el usuario existente por ID y luego hemos actualizado este usuario existente con nombre, apellido, correo electrónico,
      * y luego hemos guardado este usuario existente en una base de datos y con nombre, apellido, correo electrónico, y luego hemos
      * guardado este usuario existente en una base de datos y a continuación, este método devuelve el objeto User actualizado
@@ -66,8 +66,19 @@ public class UserServiceImpl implements UserService {
         exstingUser.setFirstName(user.getFirstName());
         exstingUser.setLastName(user.getLastName());
         exstingUser.setEmail(user.getEmail());
-        User updateUser= userRepository.save(exstingUser);
+        User updateUser = userRepository.save(exstingUser);
         return updateUser;
+    }
+
+    /**
+     * La API de REST llama internamente a este método de eliminación
+     * de usuario.
+     * @param userId
+     */
+
+    @Override
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
     }
 }
 /**
