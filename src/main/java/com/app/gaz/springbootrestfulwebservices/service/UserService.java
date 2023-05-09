@@ -9,6 +9,8 @@ public interface UserService {
 
     User createUser(User user);
 
+    User getUserById(Long userId);
+
 }
 /** 3
  * Definamos el método en una interfaz UserService, Así que demos el tipo de retorno
