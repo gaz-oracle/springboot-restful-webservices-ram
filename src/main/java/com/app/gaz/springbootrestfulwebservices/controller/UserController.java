@@ -32,6 +32,17 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @GetMapping("/email")
+    public List<User> getByEmail(@RequestParam String email) {
+        return userService.getByEmail(email);
+    }
+
+    @GetMapping("/emails")
+    public ResponseEntity<List<User>> getUserByEmails(@RequestParam String email) {
+        List<User> users = userService.getByEmail(email);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
@@ -51,6 +62,7 @@ public class UserController {
         userService.deleteUser(userId);
         return new ResponseEntity<>("User Delete Ok", HttpStatus.OK);
     }
+
 }
 
 
