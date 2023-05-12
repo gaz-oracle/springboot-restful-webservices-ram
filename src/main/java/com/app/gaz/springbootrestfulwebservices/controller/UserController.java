@@ -1,5 +1,6 @@
 package com.app.gaz.springbootrestfulwebservices.controller;
 
+import com.app.gaz.springbootrestfulwebservices.dto.UserDto;
 import com.app.gaz.springbootrestfulwebservices.entity.User;
 import com.app.gaz.springbootrestfulwebservices.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User savedUser = userService.createUser(user);
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+        UserDto savedUser = userService.createUser(userDto);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
