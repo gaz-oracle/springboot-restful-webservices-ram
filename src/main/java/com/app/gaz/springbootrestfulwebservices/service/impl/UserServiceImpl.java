@@ -5,6 +5,8 @@ import com.app.gaz.springbootrestfulwebservices.entity.User;
 import com.app.gaz.springbootrestfulwebservices.mapper.UserMapper;
 import com.app.gaz.springbootrestfulwebservices.repository.UserRepository;
 import com.app.gaz.springbootrestfulwebservices.service.UserService;
+import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,25 +17,33 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private ModelMapper modelMapper;
 
-    @Override
     public UserDto createUser(UserDto userDto) {
 
-        /** 1. Convert UserDto into User JPA Entity */
-        User user = UserMapper.mapToUser(userDto);
+        /** 1. Convert UserDto into User JPA Entity
+         *   User user = UserMapper.mapToUser(userDto);
+         * -----------------------------------------------------------------------------------
+         * Vamos a utilar la API de mapa modelmapper para convertir UserDto en una
+         *  entidad JPA de USER.   ORIGIN     DESTINIO            */
+        User user = modelMapper.map(userDto, User.class);
+
+
 
         User savedUser = userRepository.save(user);
 
-        /** 2. Convert User JPA entity to UserDto */
-        UserDto savedUserDto = UserMapper.mapToUserDto(savedUser);
+        /** 2. Convert User JPA entity to UserDto
+         *  UserDto savedUserDto = UserMapper.mapToUserDto(savedUser);
+         *  -----------------------------------------------------------------------------------
+         *  Vamos a utilarel método de mapa de puntos modelmapper para convertir la entidad JPA
+         *  de usuario en UserDto.               ORIGIN     DESTINIO             */
+        UserDto savedUserDto = modelMapper.map(savedUser, UserDto.class);
+
 
         return savedUserDto;
     }
@@ -42,7 +52,8 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserById(Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         User user = optionalUser.get();
-        return UserMapper.mapToUserDto(user);
+        //return UserMapper.mapToUserDto(user);
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override
@@ -54,10 +65,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getAllUsers() {
 
-       List<User> users= userRepository.findAll();
+        List<User> users = userRepository.findAll();
 
-        return users.stream().map(UserMapper::mapToUserDto)
+        /**
+         * return users.stream().map(UserMapper::mapToUserDto)
+         .collect(Collectors.toList());
+         */
+        return users.stream().map((user -> modelMapper.map(user, UserDto.class)))
                 .collect(Collectors.toList());
+
     }
 
     @Override
@@ -66,18 +82,8 @@ public class UserServiceImpl implements UserService {
 
         BeanUtils.copyProperties(userDto, exstingUser);
         User updateUser = userRepository.save(exstingUser);
-
-        return UserMapper.mapToUserDto(updateUser);
-
-        /** PARA NO PASAR PARAMETRO POR PARAMETRO SE USA EL : BeanUtils.copyProperties
-         *
-         *  Se utiliza cuando se ve a actulizar ciertos datos:
-         *  exstingUser.setFirstName(user.getFirstName());
-         *         exstingUser.setLastName(user.getLastName());
-         *         exstingUser.setEmail(user.getEmail());
-         *         User updateUser = userRepository.save(exstingUser);
-         */
-
+        // return UserMapper.mapToUserDto(updateUser);
+        return modelMapper.map(updateUser, UserDto.class);
 
     }
 
@@ -86,3 +92,15 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(userId);
     }
 }
+
+
+/**
+ * manejado la ID atraves de lombok @AllArgsConstructor
+ *
+ * @Autowired public UserServiceImpl(ModelMapper modelMapper) {
+ * this.modelMapper = modelMapper;
+ * }
+ * @Autowired public UserServiceImpl(UserRepository userRepository) {
+ * this.userRepository = userRepository;
+ * }
+ */
