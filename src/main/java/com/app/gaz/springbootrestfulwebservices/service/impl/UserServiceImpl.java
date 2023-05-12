@@ -2,6 +2,7 @@ package com.app.gaz.springbootrestfulwebservices.service.impl;
 
 import com.app.gaz.springbootrestfulwebservices.dto.UserDto;
 import com.app.gaz.springbootrestfulwebservices.entity.User;
+import com.app.gaz.springbootrestfulwebservices.mapper.UserMapper;
 import com.app.gaz.springbootrestfulwebservices.repository.UserRepository;
 import com.app.gaz.springbootrestfulwebservices.service.UserService;
 import org.springframework.beans.BeanUtils;
@@ -24,33 +25,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        /**
-         * 1. Convert UserDto into User JPA Entity
-         * 2. Guardemos este objeto de entidad de usuario en la base de datos,
-         *     mediante el método save() de UserRepository.
-         * 3. Este método createUser tiene que devolver el objeto UserDto
-         * 4. Así que vamos a convertir este objeto de entidad JPA de usuario en objeto UserDto.
-         * 5. la API REST básicamente espera que el usuario guardado en una respuesta Y
-         *    este usuario guardado contiene la clave principal, Es por eso que necesitamos
-         *    convertir esta entidad User en UserDto y necesitamos regresar como respuesta de este metodo.
-         * */
 
         /** 1. Convert UserDto into User JPA Entity */
-        User user = new User(
-                userDto.getId(),
-                userDto.getFirstName(),
-                userDto.getLastName(),
-                userDto.getEmail()
-        );
+        User user = UserMapper.mapToUser(userDto);
+
         User savedUser = userRepository.save(user);
 
-        /** 5. Convert User JPA entity to UserDto */
-        UserDto savedUserDto = new UserDto(
-                savedUser.getId(),
-                savedUser.getFirstName(),
-                savedUser.getLastName(),
-                savedUser.getEmail()
-        );
+        /** 2. Convert User JPA entity to UserDto */
+        UserDto savedUserDto = UserMapper.mapToUserDto(savedUser);
+
         return savedUserDto;
     }
 
