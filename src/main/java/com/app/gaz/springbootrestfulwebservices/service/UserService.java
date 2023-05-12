@@ -12,14 +12,15 @@ public interface UserService {
 
     UserDto createUser(UserDto userDto);
 
-    User getUserById(Long userId);
+    UserDto getUserById(Long userId);
 
-    List<User> getByEmail(String email);
-
-    List<User> getAllUsers();
-
-    User updateUser(User user);
+    UserDto updateUser(UserDto userDto);
 
     void deleteUser(Long userId);
+
+    List<UserDto> getAllUsers();
+
+    /** GALAXY - CUSTOMIZABLE */
+    List<User> getByEmail(String email);
 
 }
