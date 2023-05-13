@@ -2,6 +2,7 @@ package com.app.gaz.springbootrestfulwebservices.service.impl;
 
 import com.app.gaz.springbootrestfulwebservices.dto.UserDto;
 import com.app.gaz.springbootrestfulwebservices.entity.User;
+import com.app.gaz.springbootrestfulwebservices.mapper.AutoUserMapper;
 import com.app.gaz.springbootrestfulwebservices.mapper.UserMapper;
 import com.app.gaz.springbootrestfulwebservices.repository.UserRepository;
 import com.app.gaz.springbootrestfulwebservices.service.UserService;
@@ -30,10 +31,9 @@ public class UserServiceImpl implements UserService {
          *   User user = UserMapper.mapToUser(userDto);
          * -----------------------------------------------------------------------------------
          * Vamos a utilar la API de mapa modelmapper para convertir UserDto en una
-         *  entidad JPA de USER.   ORIGIN     DESTINIO            */
-        User user = modelMapper.map(userDto, User.class);
-
-
+         *  entidad JPA de USER.   ORIGIN     DESTINIO
+         *  User user = modelMapper.map(userDto, User.class);*/
+        User user = AutoUserMapper.MAPPER.mapTouser(userDto);
 
         User savedUser = userRepository.save(user);
 
@@ -41,9 +41,9 @@ public class UserServiceImpl implements UserService {
          *  UserDto savedUserDto = UserMapper.mapToUserDto(savedUser);
          *  -----------------------------------------------------------------------------------
          *  Vamos a utilarel método de mapa de puntos modelmapper para convertir la entidad JPA
-         *  de usuario en UserDto.               ORIGIN     DESTINIO             */
-        UserDto savedUserDto = modelMapper.map(savedUser, UserDto.class);
-
+         *  de usuario en UserDto.               ORIGIN     DESTINIO
+         *      UserDto savedUserDto = modelMapper.map(savedUser, UserDto.class);*/
+         UserDto savedUserDto = AutoUserMapper.MAPPER.mapToUserDto(savedUser);
 
         return savedUserDto;
     }
@@ -53,7 +53,8 @@ public class UserServiceImpl implements UserService {
         Optional<User> optionalUser = userRepository.findById(userId);
         User user = optionalUser.get();
         //return UserMapper.mapToUserDto(user);
-        return modelMapper.map(user, UserDto.class);
+        //return modelMapper.map(user, UserDto.class);
+        return  AutoUserMapper.MAPPER.mapToUserDto(optionalUser.get());
     }
 
     @Override
@@ -71,9 +72,10 @@ public class UserServiceImpl implements UserService {
          * return users.stream().map(UserMapper::mapToUserDto)
          .collect(Collectors.toList());
          */
-        return users.stream().map((user -> modelMapper.map(user, UserDto.class)))
+        /** return users.stream().map((user -> modelMapper.map(user, UserDto.class)))
+                .collect(Collectors.toList());*/
+        return users.stream().map((user -> AutoUserMapper.MAPPER.mapToUserDto(user)))
                 .collect(Collectors.toList());
-
     }
 
     @Override
@@ -83,7 +85,8 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(userDto, exstingUser);
         User updateUser = userRepository.save(exstingUser);
         // return UserMapper.mapToUserDto(updateUser);
-        return modelMapper.map(updateUser, UserDto.class);
+        //return modelMapper.map(updateUser, UserDto.class);
+        return AutoUserMapper.MAPPER.mapToUserDto(updateUser);
 
     }
 
