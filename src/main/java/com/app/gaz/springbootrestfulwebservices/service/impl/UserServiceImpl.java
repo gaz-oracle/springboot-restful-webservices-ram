@@ -27,23 +27,11 @@ public class UserServiceImpl implements UserService {
 
     public UserDto createUser(UserDto userDto) {
 
-        /** 1. Convert UserDto into User JPA Entity
-         *   User user = UserMapper.mapToUser(userDto);
-         * -----------------------------------------------------------------------------------
-         * Vamos a utilar la API de mapa modelmapper para convertir UserDto en una
-         *  entidad JPA de USER.   ORIGIN     DESTINIO
-         *  User user = modelMapper.map(userDto, User.class);*/
         User user = AutoUserMapper.MAPPER.mapTouser(userDto);
 
         User savedUser = userRepository.save(user);
 
-        /** 2. Convert User JPA entity to UserDto
-         *  UserDto savedUserDto = UserMapper.mapToUserDto(savedUser);
-         *  -----------------------------------------------------------------------------------
-         *  Vamos a utilarel método de mapa de puntos modelmapper para convertir la entidad JPA
-         *  de usuario en UserDto.               ORIGIN     DESTINIO
-         *      UserDto savedUserDto = modelMapper.map(savedUser, UserDto.class);*/
-         UserDto savedUserDto = AutoUserMapper.MAPPER.mapToUserDto(savedUser);
+        UserDto savedUserDto = AutoUserMapper.MAPPER.mapToUserDto(savedUser);
 
         return savedUserDto;
     }
@@ -51,10 +39,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserById(Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.get();
-        //return UserMapper.mapToUserDto(user);
-        //return modelMapper.map(user, UserDto.class);
-        return  AutoUserMapper.MAPPER.mapToUserDto(optionalUser.get());
+      // User user = optionalUser.get(); ?
+        return AutoUserMapper.MAPPER.mapToUserDto(optionalUser.get());
     }
 
     @Override
@@ -68,26 +54,16 @@ public class UserServiceImpl implements UserService {
 
         List<User> users = userRepository.findAll();
 
-        /**
-         * return users.stream().map(UserMapper::mapToUserDto)
-         .collect(Collectors.toList());
-         */
-        /** return users.stream().map((user -> modelMapper.map(user, UserDto.class)))
-                .collect(Collectors.toList());*/
         return users.stream().map((user -> AutoUserMapper.MAPPER.mapToUserDto(user)))
                 .collect(Collectors.toList());
     }
 
     @Override
     public UserDto updateUser(UserDto userDto) {
-        User exstingUser = userRepository.findById(userDto.getId()).get();// save if.IsNull because: class Optional<T>
-
+        User exstingUser = userRepository.findById(userDto.getId()).get();
         BeanUtils.copyProperties(userDto, exstingUser);
         User updateUser = userRepository.save(exstingUser);
-        // return UserMapper.mapToUserDto(updateUser);
-        //return modelMapper.map(updateUser, UserDto.class);
         return AutoUserMapper.MAPPER.mapToUserDto(updateUser);
-
     }
 
     @Override
@@ -96,14 +72,3 @@ public class UserServiceImpl implements UserService {
     }
 }
 
-
-/**
- * manejado la ID atraves de lombok @AllArgsConstructor
- *
- * @Autowired public UserServiceImpl(ModelMapper modelMapper) {
- * this.modelMapper = modelMapper;
- * }
- * @Autowired public UserServiceImpl(UserRepository userRepository) {
- * this.userRepository = userRepository;
- * }
- */

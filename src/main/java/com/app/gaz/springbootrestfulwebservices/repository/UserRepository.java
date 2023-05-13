@@ -11,18 +11,7 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    //JPQL: Java Persistence Query Language @Query
     @Query("select m from User m where upper(m.email) like upper(:email)")
     List<User> getByEmail(@Param("email") String email);
-
-    /**
-     *SELECT
-     *     employee_id,
-     *     first_name
-     * FROM
-     *     employees
-     * WHERE
-     *     UPPER(first_name) = 'BRUCE';
-     */
 }
 
