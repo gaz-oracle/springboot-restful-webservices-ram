@@ -4,18 +4,13 @@ import com.app.gaz.springbootrestfulwebservices.dto.UserDto;
 import com.app.gaz.springbootrestfulwebservices.entity.User;
 import com.app.gaz.springbootrestfulwebservices.exception.ResourceNotFoundException;
 import com.app.gaz.springbootrestfulwebservices.mapper.AutoUserMapper;
-import com.app.gaz.springbootrestfulwebservices.mapper.UserMapper;
 import com.app.gaz.springbootrestfulwebservices.repository.UserRepository;
 import com.app.gaz.springbootrestfulwebservices.service.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
