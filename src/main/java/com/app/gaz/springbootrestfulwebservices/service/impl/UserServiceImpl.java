@@ -2,6 +2,7 @@ package com.app.gaz.springbootrestfulwebservices.service.impl;
 
 import com.app.gaz.springbootrestfulwebservices.dto.UserDto;
 import com.app.gaz.springbootrestfulwebservices.entity.User;
+import com.app.gaz.springbootrestfulwebservices.exception.EmailAlredyExistsException;
 import com.app.gaz.springbootrestfulwebservices.exception.ResourceNotFoundException;
 import com.app.gaz.springbootrestfulwebservices.mapper.AutoUserMapper;
 import com.app.gaz.springbootrestfulwebservices.repository.UserRepository;
@@ -11,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,7 +23,13 @@ public class UserServiceImpl implements UserService {
 
     private ModelMapper modelMapper;
 
-    public UserDto createUser(UserDto userDto) {
+    @Override
+    public UserDto createUser(UserDto userDto) throws EmailAlredyExistsException {
+
+        Optional<User> optionalUser = userRepository.findByEmail(userDto.getEmail());
+        if(optionalUser.isPresent()){
+            throw new EmailAlredyExistsException("Email ya Existe para el Usario");
+        }
 
         User user = AutoUserMapper.MAPPER.mapTouser(userDto);
 
@@ -75,5 +83,9 @@ public class UserServiceImpl implements UserService {
 
         userRepository.deleteById(userId);
     }
+    /**
+     * Dentro de este método, podemos escribir la lógica para verificar si el correo electrónico
+     * del usuario ya existe en la base de datos.
+     */
 }
 
