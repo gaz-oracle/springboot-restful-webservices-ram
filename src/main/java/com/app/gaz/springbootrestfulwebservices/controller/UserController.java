@@ -6,6 +6,7 @@ import com.app.gaz.springbootrestfulwebservices.exception.EmailAlredyExistsExcep
 import com.app.gaz.springbootrestfulwebservices.exception.ErrorDetails;
 import com.app.gaz.springbootrestfulwebservices.exception.ResourceNotFoundException;
 import com.app.gaz.springbootrestfulwebservices.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) throws EmailAlredyExistsException {
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto)
+            throws EmailAlredyExistsException {
         UserDto savedUser = userService.createUser(userDto);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
@@ -57,7 +59,7 @@ public class UserController {
 
     @PutMapping("{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long userId,
-                                           @RequestBody UserDto  user) {
+                                           @RequestBody @Valid UserDto  user) {
         user.setId(userId);
         UserDto updateUser = userService.updateUser(user);
         return new ResponseEntity<>(updateUser, HttpStatus.OK);
